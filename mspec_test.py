@@ -21,7 +21,7 @@ from tools.calculate_psnr_ssim import calculate_psnr_ssim
 from tiler import Tiler, Merger
 import random
 from tiling import ConstSizeTiles
-from Bilateral_Guided_Upsampling.main import wrapper
+
 os.environ['CUDA_VISIBLE_DEVICES']='0'
 def exposure_correction(MSPEC_net,data_input):
 	if data_input.dtype == 'uint8':
@@ -78,13 +78,14 @@ if __name__ == '__main__':
 		MSPEC_net =torch.nn.DataParallel(MSPEC_net)
 		MSPEC_net.load_state_dict(torch.load('./snapshots/MSPECnet_woadv.pth'))
 		MSPEC_net.eval()
-		filedir ='./MultiExposure_dataset/testing/INPUT_IMAGES'
-		gtimg_dir = './MultiExposure_dataset/testing/expert_c_testing_set'
+		filedir ='/data2/shaun/datasets/exposure_correction/exposure_errors/testing/INPUT_IMAGES'
+		gtimg_dir = '/data2/shaun/datasets/exposure_correction/exposure_errors/testing/expert_c_testing_set'
 		test_list = glob.glob(filedir+"/*") 
 		test_list.sort()
-		savedir = './MultiExposure_dataset/testing/eval_output'
+		savedir = '/data2/shaun/projects/color_evaluation/m_afifi_unofficial_lz-ch/output_images'
 		if not os.path.exists(savedir):
     			os.makedirs(savedir)
+
 		for n,imagepath in enumerate (test_list):
 			evaluate(MSPEC_net,imagepath,savedir)
 			if ((n+1)%100 == 0):
